@@ -4,6 +4,8 @@ A Kotlin Multiplatform radio streaming app modeled after the [Rust-based radio-p
 
 Stream live Caribbean radio stations including Reggae, Soca, Bollywood, Dancehall, and more — all from a beautiful Material Design 3 Compose UI.
 
+> **Downloaded from [Releases](../../releases)?** See [GETTING_STARTED.md](GETTING_STARTED.md) for instructions on running the pre-built packages.
+
 ## Architecture
 
 This project uses Kotlin Multiplatform with Compose UI, targeting Web (Wasm) and Server (Ktor), built with the [Kotlin Toolchain](https://kotlin-toolchain.org/latest/).
