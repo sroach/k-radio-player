@@ -6,6 +6,7 @@ import io.ktor.http.HttpStatusCode
 import io.ktor.server.testing.testApplication
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 class ApplicationTest {
 
@@ -14,8 +15,10 @@ class ApplicationTest {
         application {
             module()
         }
-        val response = client.get("/")
+        val response = client.get("/api/stations")
         assertEquals(HttpStatusCode.OK, response.status)
-        assertEquals("Hello, Ktor!", response.bodyAsText())
+        val body = response.bodyAsText()
+        assertTrue(body.startsWith("["), "Response should be a JSON array")
+        assertTrue(body.contains("Pepperpot Radio"), "Response should contain station data")
     }
 }
