@@ -30,6 +30,25 @@ jobs:
       - name: Run tests
         run: ./kotlin test
 
+      - name: Package server executable JAR
+        run: ./kotlin package -m server -f executable-jar
+
+      - name: Package web app
+        run: |
+          WEB_APP_DIR="build/tasks/_webApp_buildWasmJsAppWasmJsDebug"
+          mkdir -p dist/web
+          # Copy only the deployable files (no node_modules, vendors, or compose resources)
+          cp "$WEB_APP_DIR/index.html" dist/web/
+          cp "$WEB_APP_DIR/webApp.wasm" dist/web/
+          cp "$WEB_APP_DIR/webApp.mjs" dist/web/
+          cp "$WEB_APP_DIR/webApp.js-builtins.mjs" dist/web/
+          cp "$WEB_APP_DIR/webApp.import-object.mjs" dist/web/
+          cp "$WEB_APP_DIR/skiko.mjs" dist/web/
+          cp "$WEB_APP_DIR/skiko.wasm" dist/web/
+          cp "$WEB_APP_DIR/styles.css" dist/web/
+          cp "$WEB_APP_DIR/import-map-loader.js" dist/web/
+          cd dist && zip -r ../web-app.zip web/ && cd ..
+
       - name: Get tag version
         id: get_version
         run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
@@ -41,3 +60,6 @@ jobs:
           generate_release_notes: true
           draft: false
           prerelease: false
+          files: |
+            build/tasks/_server_executableJarJvm/server-jvm-executable.jar
+            web-app.zip
