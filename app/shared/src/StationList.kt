@@ -153,10 +153,12 @@ private fun StationCard(
             contentAlignment = Alignment.Center
         ) {
             Text(
-                text = (station.label.firstOrNull()?.uppercaseChar() ?: 'R').toString(),
+                text = station.label,
                 color = Color.White,
                 fontWeight = FontWeight.SemiBold,
-                fontSize = 24.sp
+                fontSize = 14.sp,
+                maxLines = 2,
+                modifier = Modifier.padding(horizontal = 8.dp)
             )
         }
 
