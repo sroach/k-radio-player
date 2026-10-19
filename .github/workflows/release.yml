@@ -37,7 +37,7 @@ jobs:
         run: |
           WEB_APP_DIR="build/tasks/_webApp_buildWasmJsAppWasmJsDebug"
           mkdir -p dist/web
-          # Copy only the deployable files (no node_modules, vendors, or compose resources)
+          # Copy core deployable files
           cp "$WEB_APP_DIR/index.html" dist/web/
           cp "$WEB_APP_DIR/webApp.wasm" dist/web/
           cp "$WEB_APP_DIR/webApp.mjs" dist/web/
@@ -47,6 +47,8 @@ jobs:
           cp "$WEB_APP_DIR/skiko.wasm" dist/web/
           cp "$WEB_APP_DIR/styles.css" dist/web/
           cp "$WEB_APP_DIR/import-map-loader.js" dist/web/
+          # Copy vendors directory (required by import-map-loader.js at runtime)
+          cp -r "$WEB_APP_DIR/vendors" dist/web/
           cd dist && zip -r ../web-app.zip web/ && cd ..
 
       - name: Get tag version

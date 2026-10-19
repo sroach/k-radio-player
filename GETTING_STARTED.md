@@ -125,6 +125,7 @@ Verify installation: `java -version` should show version 17 or higher.
 - Make sure you're serving the files via HTTP, not opening `file://` directly.
 - Check the browser console (F12) for WebAssembly errors.
 - Ensure your browser supports WebAssembly (Chrome 120+, Firefox 120+, Safari 17+).
+- **Missing `vendors/` directory** — If you downloaded a release before v1.0.1, the `vendors/` folder may be missing. Redownload the latest `web-app.zip` from [Releases](../../releases). The `vendors/` directory is required — do not remove it when deploying.
 
 ### Radio stations won't play
 
@@ -140,6 +141,20 @@ lsof -ti:8080 | xargs kill
 ```
 
 Or use a different port for your static file server (e.g., `python3 -m http.server 3000`).
+
+### "Loading module blocked because of a disallowed MIME type"
+
+This error in the browser console means nginx (or your web server) is returning HTML instead of JavaScript for vendor files. Causes:
+- **Missing `vendors/` directory** — Redownload the latest release; earlier versions didn't include vendor dependencies.
+- **nginx misconfiguration** — Make sure nginx is serving all file types correctly. Add this to your nginx config if needed:
+  ```nginx
+  location /vendors/ {
+      types {
+          application/javascript js mjs;
+      }
+      default_type application/javascript;
+  }
+  ```
 
 ---
 

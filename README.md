@@ -79,7 +79,7 @@ The web app is built with `./kotlin build` and the deployable files are located 
 ```
 build/tasks/_webApp_buildWasmJsAppWasmJsDebug/
 ```
-Copy these files to any static web server (nginx, Apache, etc.) to serve the web app.
+Copy the **entire** contents of this directory (including the `vendors/` folder) to any static web server (nginx, Apache, etc.) to serve the web app. The `vendors/` directory contains runtime dependencies required by the Kotlin/Wasm import map loader — do not omit it.
 
 ## Releasing
 
