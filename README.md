@@ -58,6 +58,32 @@ The `kotlin` (macOS/Linux) and `kotlin.bat` (Windows) scripts in the project roo
 ./kotlin test
 ```
 
+## Releasing
+
+This project uses **Git tags** for versioning. To create a release:
+
+### 1. Bump the version
+
+Choose a version number following [Semantic Versioning](https://semver.org/) (e.g., `v1.0.0`, `v1.1.0`, `v2.0.0`).
+
+### 2. Tag and push
+
+```bash
+# Create and push the version tag
+git tag -a v1.0.0 -m "Release v1.0.0"
+git push origin main --tags
+```
+
+### 3. GitHub Actions creates the release
+
+Pushing a tag matching `v*` automatically triggers the **Release** workflow, which:
+
+1. Builds the project
+2. Runs all tests
+3. Creates a GitHub Release with auto-generated release notes
+
+The release will appear at `https://github.com/<owner>/<repo>/releases`.
+
 ---
 
 Learn more about [Kotlin Multiplatform](https://www.jetbrains.com/help/kotlin-multiplatform-dev/get-started.html), [Kotlin Toolchain](https://kotlin-toolchain.org/latest/), [Compose Multiplatform](https://kotlinlang.org/compose-multiplatform/), [Kotlin/Wasm](https://kotl.in/wasm/), [Ktor](https://ktor.io/).
