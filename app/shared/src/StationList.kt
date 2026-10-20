@@ -20,13 +20,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
-// ---- Apple-inspired color tokens (shared with App.kt) ----
-
-private val ColorElevatedSurface = Color(0xFF1C1C1E)
-private val ColorTextPrimary = Color(0xFFFFFFFF)
-private val ColorTextSecondary = Color(0xFF8E8E93)
-private val ColorAccentBlue = Color(0xFF0A84FF)
-private val ColorAccentPurple = Color(0xFF5E5CE6)
+// No hardcoded colors — all colors come from MaterialTheme.colorScheme
 
 /**
  * Gradient pairs for station artwork — Apple Music style.
@@ -52,6 +46,7 @@ fun StationList(
     isLoading: Boolean,
     error: String?,
     currentStationIndex: Int?,
+    isPlaying: Boolean,
     onStationSelected: (RadioStation) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -65,14 +60,14 @@ fun StationList(
             ) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     CircularProgressIndicator(
-                        color = ColorAccentBlue,
+                        color = MaterialTheme.colorScheme.primary,
                         strokeWidth = 2.dp
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                     Text(
                         text = "Loading stations...",
                         fontSize = 16.sp,
-                        color = ColorTextSecondary
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
             }
@@ -99,21 +94,29 @@ fun StationList(
                 Text(
                     text = "No stations available",
                     fontSize = 16.sp,
-                    color = ColorTextSecondary
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
         } else {
-            LazyVerticalGrid(
-                columns = GridCells.Fixed(3),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                items(stations, key = { it.index }) { station ->
-                    StationCard(
-                        station = station,
-                        isCurrent = currentStationIndex == station.index,
-                        onClick = { onStationSelected(station) }
-                    )
+            BoxWithConstraints {
+                val columns = when {
+                    maxWidth < 600.dp -> 1   // Phone: 1 per row
+                    maxWidth < 900.dp -> 2   // Tablet: 2 per row
+                    else -> 3                // Desktop: 3 per row
+                }
+                LazyVerticalGrid(
+                    columns = GridCells.Fixed(columns),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    items(stations, key = { it.index }) { station ->
+                        StationCard(
+                            station = station,
+                            isCurrent = currentStationIndex == station.index,
+                            isPlaying = isPlaying,
+                            onClick = { onStationSelected(station) }
+                        )
+                    }
                 }
             }
         }
@@ -127,6 +130,7 @@ fun StationList(
 private fun StationCard(
     station: RadioStation,
     isCurrent: Boolean,
+    isPlaying: Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -139,7 +143,7 @@ private fun StationCard(
         modifier = modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(20.dp))
-            .background(ColorElevatedSurface)
+            .background(MaterialTheme.colorScheme.surface)
             .clickable(onClick = onClick)
             .padding(16.dp)
     ) {
@@ -169,7 +173,7 @@ private fun StationCard(
             text = station.label,
             fontSize = 14.sp,
             fontWeight = FontWeight.Medium,
-            color = ColorTextPrimary,
+            color = MaterialTheme.colorScheme.onSurface,
             maxLines = 1
         )
 
@@ -184,17 +188,17 @@ private fun StationCard(
                     text = genre,
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Normal,
-                    color = ColorTextSecondary,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier
                         .clip(RoundedCornerShape(8.dp))
-                        .background(Color(0xFF2C2C2E))
+                        .background(MaterialTheme.colorScheme.outline.copy(alpha = 0.3f))
                         .padding(horizontal = 8.dp, vertical = 4.dp)
                 )
             }
         }
 
-        // Animated equalizer bars when playing
-        if (isCurrent) {
+        // Animated equalizer bars only when current station is actively playing
+        if (isCurrent && isPlaying) {
             Spacer(modifier = Modifier.height(8.dp))
             AnimatedEqualizerBars()
         }
@@ -245,21 +249,21 @@ private fun AnimatedEqualizerBars() {
                 .width(2.dp)
                 .height(height1.dp)
                 .clip(RoundedCornerShape(1.dp))
-                .background(ColorAccentBlue)
+                .background(MaterialTheme.colorScheme.primary)
         )
         Box(
             modifier = Modifier
                 .width(2.dp)
                 .height(height2.dp)
                 .clip(RoundedCornerShape(1.dp))
-                .background(ColorAccentBlue)
+                .background(MaterialTheme.colorScheme.primary)
         )
         Box(
             modifier = Modifier
                 .width(2.dp)
                 .height(height3.dp)
                 .clip(RoundedCornerShape(1.dp))
-                .background(ColorAccentBlue)
+                .background(MaterialTheme.colorScheme.primary)
         )
     }
 }

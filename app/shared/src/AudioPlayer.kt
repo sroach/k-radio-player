@@ -17,13 +17,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
-// ---- Apple-inspired color tokens (shared with App.kt) ----
-
-private val ColorElevatedSurface = Color(0xFF1C1C1E)
-private val ColorSurfaceBorder = Color(0xFF2C2C2E)
-private val ColorTextPrimary = Color(0xFFFFFFFF)
-private val ColorTextSecondary = Color(0xFF8E8E93)
-private val ColorAccentBlue = Color(0xFF0A84FF)
+// No hardcoded colors — all colors come from MaterialTheme.colorScheme
 
 /**
  * Audio player component — Apple Music-style floating now-playing bar.
@@ -44,7 +38,7 @@ fun AudioPlayer(
             modifier = modifier
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(20.dp))
-                .background(ColorElevatedSurface)
+                .background(MaterialTheme.colorScheme.surface)
                 .padding(16.dp)
         ) {
             // Station info + play/pause row
@@ -58,7 +52,7 @@ fun AudioPlayer(
                         text = currentStation.label,
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Medium,
-                        color = ColorTextPrimary,
+                        color = MaterialTheme.colorScheme.onSurface,
                         maxLines = 1
                     )
                     Spacer(modifier = Modifier.height(2.dp))
@@ -66,7 +60,7 @@ fun AudioPlayer(
                         text = currentStation.type.joinToString(" • "),
                         fontSize = 12.sp,
                         fontWeight = FontWeight.Normal,
-                        color = ColorTextSecondary,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                         maxLines = 1
                     )
                 }
@@ -77,7 +71,7 @@ fun AudioPlayer(
                         .size(48.dp)
                         .clickable(onClick = onPlayPause),
                     shape = CircleShape,
-                    color = ColorAccentBlue
+                    color = MaterialTheme.colorScheme.primary
                 ) {
                     Box(contentAlignment = Alignment.Center) {
                         Text(
@@ -104,14 +98,14 @@ fun AudioPlayer(
             modifier = modifier
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(20.dp))
-                .background(ColorElevatedSurface)
+                .background(MaterialTheme.colorScheme.surface)
                 .padding(24.dp),
             contentAlignment = Alignment.Center
         ) {
             Text(
                 text = "Select a station to start listening",
                 fontSize = 14.sp,
-                color = ColorTextSecondary
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
     }
@@ -139,7 +133,7 @@ private fun SlimSlider(
                 .height(2.dp)
                 .align(Alignment.Center)
                 .clip(RoundedCornerShape(1.dp))
-                .background(ColorSurfaceBorder)
+                .background(MaterialTheme.colorScheme.outline)
         )
 
         // Track fill
@@ -149,7 +143,7 @@ private fun SlimSlider(
                 .height(2.dp)
                 .align(Alignment.CenterStart)
                 .clip(RoundedCornerShape(1.dp))
-                .background(ColorAccentBlue)
+                .background(MaterialTheme.colorScheme.primary)
         )
 
         // Thumb

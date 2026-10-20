@@ -14,18 +14,55 @@ import org.jetbrains.compose.reload.DevelopmentEntryPoint
 
 // ---- Apple-inspired color tokens ----
 
-private val ColorPureBlack = Color(0xFF000000)
-private val ColorElevatedSurface = Color(0xFF1C1C1E)
-private val ColorSurfaceBorder = Color(0xFF2C2C2E)
 private val ColorAccentBlue = Color(0xFF0A84FF)
 private val ColorAccentPurple = Color(0xFF5E5CE6)
-private val ColorTextPrimary = Color(0xFFFFFFFF)
-private val ColorTextSecondary = Color(0xFF8E8E93)
-private val ColorTextTertiary = Color(0xFF636366)
+
+// Dark mode colors
+private val ColorDarkBackground = Color(0xFF000000)
+private val ColorDarkSurface = Color(0xFF1C1C1E)
+private val ColorDarkSurfaceBorder = Color(0xFF2C2C2E)
+private val ColorDarkTextPrimary = Color(0xFFFFFFFF)
+private val ColorDarkTextSecondary = Color(0xFF8E8E93)
+private val ColorDarkTextTertiary = Color(0xFF636366)
+
+// Light mode colors
+private val ColorLightBackground = Color(0xFFFFFFFF)
+private val ColorLightSurface = Color(0xFFF5F5F7)
+private val ColorLightSurfaceBorder = Color(0xFFE5E5EA)
+private val ColorLightTextPrimary = Color(0xFF000000)
+private val ColorLightTextSecondary = Color(0xFF8E8E93)
+private val ColorLightTextTertiary = Color(0xFFAEAEB2)
+
+@Composable
+private fun AppleColorScheme(isDark: Boolean): ColorScheme {
+    return if (isDark) {
+        darkColorScheme(
+            primary = ColorAccentBlue,
+            secondary = ColorAccentPurple,
+            background = ColorDarkBackground,
+            surface = ColorDarkSurface,
+            onBackground = ColorDarkTextPrimary,
+            onSurface = ColorDarkTextPrimary,
+            onSurfaceVariant = ColorDarkTextSecondary,
+            outline = ColorDarkSurfaceBorder
+        )
+    } else {
+        lightColorScheme(
+            primary = ColorAccentBlue,
+            secondary = ColorAccentPurple,
+            background = ColorLightBackground,
+            surface = ColorLightSurface,
+            onBackground = ColorLightTextPrimary,
+            onSurface = ColorLightTextPrimary,
+            onSurfaceVariant = ColorLightTextSecondary,
+            outline = ColorLightSurfaceBorder
+        )
+    }
+}
 
 /**
  * Main App composable for the Caribbean Radio Player.
- * Apple-inspired dark theme: pure black background, refined accent colors, minimal aesthetics.
+ * Apple-inspired theme with automatic light/dark mode support based on system preference.
  */
 @Composable
 @Preview
@@ -33,22 +70,14 @@ private val ColorTextTertiary = Color(0xFF636366)
 fun App() {
     val viewModel = remember { RadioViewModel() }
     val state = viewModel.uiState
+    val isDark = isDarkMode()
 
     MaterialTheme(
-        colorScheme = darkColorScheme(
-            primary = ColorAccentBlue,
-            secondary = ColorAccentPurple,
-            background = ColorPureBlack,
-            surface = ColorElevatedSurface,
-            onBackground = ColorTextPrimary,
-            onSurface = ColorTextPrimary,
-            onSurfaceVariant = ColorTextSecondary,
-            outline = ColorSurfaceBorder
-        )
+        colorScheme = AppleColorScheme(isDark)
     ) {
         Surface(
             modifier = Modifier.fillMaxSize(),
-            color = ColorPureBlack
+            color = MaterialTheme.colorScheme.background
         ) {
             Column(
                 modifier = Modifier
@@ -68,6 +97,7 @@ fun App() {
                     isLoading = state.isLoading,
                     error = state.error,
                     currentStationIndex = state.currentStation?.index,
+                    isPlaying = state.isPlaying,
                     onStationSelected = { viewModel.selectStation(it) },
                     modifier = Modifier.weight(1f)
                 )
@@ -103,7 +133,7 @@ private fun CaribbeanRadioHeader() {
             text = "Caribbean Radio",
             fontWeight = FontWeight.SemiBold,
             fontSize = 30.sp,
-            color = ColorTextPrimary
+            color = MaterialTheme.colorScheme.onBackground
         )
 
         Spacer(modifier = Modifier.height(4.dp))
@@ -113,7 +143,7 @@ private fun CaribbeanRadioHeader() {
             text = "Live streaming from the islands",
             fontWeight = FontWeight.Normal,
             fontSize = 16.sp,
-            color = ColorTextSecondary
+            color = MaterialTheme.colorScheme.onSurfaceVariant
         )
     }
 }
